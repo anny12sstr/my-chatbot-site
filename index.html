@@ -6,13 +6,12 @@
   <title>Мій FAQ Бот</title>
   <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
   <style>
-    /* Стилі для основної сторінки */
     body {
       margin: 0;
       padding: 0;
       font-family: 'Roboto', sans-serif;
-      background-color: #EEF7EE; /* Світло-зелений фон, як у чат-бота */
-      color: #097138; /* Темно-зелений текст, як у чат-бота */
+      background-color: #EEF7EE;
+      color: #097138;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,7 +35,7 @@
       margin-bottom: 20px;
     }
     .examples {
-      background-color: #C8E6C9; /* Світло-зелений фон, як у повідомлень бота */
+      background-color: #C8E6C9;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -53,9 +52,8 @@
     .examples li {
       font-size: 18px;
       margin: 10px 0;
-      color: #4CAF50; /* Зелений, як у повідомлень користувача */
+      color: #4CAF50;
     }
-    /* Стилі для чат-бота (залишаємо без змін) */
     df-messenger {
       z-index: 999;
       position: fixed;
@@ -71,7 +69,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Ласкаво просимо на мій сайт!</h1>
+    <h1>Cup Decorating Bot :)</h1>
     <p>Цей чат-бот створений, щоб допомогти вам із декоруванням чашок.</p>
     <div class="examples">
       <p>Ось приклади питань, на які він може відповісти:</p>
@@ -79,7 +77,7 @@
         <li>Як прикрасити чашку для подарунка?</li>
         <li>Які матеріали краще використовувати для декору?</li>
         <li>Чи можна декорувати чашки фарбами?</li>
-        <li>Скільки часу займає декорування чашки?</li>
+        <li>Яка техніка декорування чашки підійде початківцю?</li>
       </ul>
     </div>
   </div>
@@ -89,10 +87,57 @@
     project-id="chat-bot-452811"
     agent-id="7715fdee-1577-40d6-a35d-37c7b9e27be9"
     language-code="uk"
-    max-query-length="-1">
+    max-query-length="-1"
+    reset-chat-on-page-load="true">
     <df-messenger-chat-bubble
       chat-title="Сup decoration bot">
     </df-messenger-chat-bubble>
   </df-messenger>
+
+  <script>
+    // Функція для приховування додаткових повідомлень
+    function hideExtraMessages() {
+      const messageList = document.querySelector('df-message-list');
+      if (!messageList) return;
+
+      const messages = messageList.querySelectorAll('df-message');
+      let botMessageCount = 0;
+
+      messages.forEach((message) => {
+        // Перевіряємо, чи це повідомлення бота за наявністю атрибута або тексту
+        const botMessageText = message.querySelector('.df-message-bot-text');
+        if (botMessageText) {
+          botMessageCount++;
+          if (botMessageCount > 1) {
+            message.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    // Використовуємо MutationObserver для відстежування змін у чаті
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        hideExtraMessages();
+      });
+    });
+
+    // Запускаємо спостерігач після завантаження сторінки
+    window.addEventListener('load', () => {
+      const chatContainer = document.querySelector('df-message-list');
+      if (chatContainer) {
+        observer.observe(chatContainer, { childList: true, subtree: true });
+      }
+
+      // Додаткова перевірка з затримкою
+      setTimeout(hideExtraMessages, 1000);
+      setInterval(hideExtraMessages, 500);
+    });
+
+    // Перевірка після взаємодії з чатом
+    document.addEventListener('click', () => {
+      setTimeout(hideExtraMessages, 500);
+    });
+  </script>
 </body>
 </html>
